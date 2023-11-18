@@ -1,0 +1,14 @@
+dataname: "feta"
+preprocess:
+    dataset_root: "/data/kimngan/BehaveFormer/FETA/raw"
+    output_dir: "/data/kimngan/BehaveFormer/FETA"
+    dataset_config:
+        scroll_sequence_len: 50
+        imu_sequence_len: 100
+        windowing_offset: 1
+    float_format: "float64"
+
+data_split:  # need to be set
+    training: 243
+    validation: 52
+    testing: 52

@@ -1,0 +1,15 @@
+dataname: "humi"
+preprocess:
+    dataset_root: "/data/kimngan/BehaveFormer/Humidb/raw/HuMI"
+    output_dir: "/data/kimngan/BehaveFormer/Humidb"
+    dataset_config:
+        scroll_sequence_len: 50
+        imu_sequence_len: 100
+        windowing_offset: 1
+        scroll_type_list: ['SCROLLDOWN', 'SCROLLUP']
+    float_format: "float64"
+
+data_split:  # need to be set
+    training: 298
+    validation: 65
+    testing: 65

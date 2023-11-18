@@ -1,0 +1,34 @@
+GPU: "True"
+data:
+    scroll_sequence_len: 50
+    imu_sequence_len: 100
+    action_type: "down"
+dataname: "humi"
+hyperparams:
+    init_epoch: 0
+    epochs: 500
+    batch_size: 128
+    epoch_batch_count: 100
+    target_len: 64
+    gre_k: 20
+    scroll_feature_dim: 8
+    scroll_temporal_heads: 4
+    scroll_channel_heads: 10
+    imu_temporal_heads: 6
+    imu_channel_heads: 10
+    imu_type: "none"  # each imu sensor has 12 features
+    num_imu: 0
+    number_of_enrollment_sessions: 3
+    number_of_verify_sessions: 2
+    learning_rate: 0.001
+    warmup_baselr: 1.0e-7
+    warmup_epochs: 5
+
+folders: 
+    root_dir: "/home/kimngan/storage/code/BehaveFormer"
+    data_dir: "/data/kimngan/BehaveFormer/Humidb/scroll50downup_imu100all"
+
+data_split:  # this is set in the data preprocessing config and copied here
+    training: 298
+    validation: 65
+    testing: 65

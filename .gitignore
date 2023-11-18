@@ -1,0 +1,13 @@
+__pycache__/
+.vscode/
+
+# Model weights and checkpoints
+*.pt
+*.tar
+*.pickle
+*.zip
+
+# Input, output directories
+data/
+work_dirs*/
+figures/
