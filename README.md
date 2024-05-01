@@ -1,9 +1,16 @@
 # Spatio-Temporal Dual-Attention Transformer for Time-Series Behavioral Biometrics
-This repository contains code for the BehaveFormer framework with on behaviour biometrics continuous identification using swipe data (scroll up and scroll down gestures). 
-For BehaveFormer using keystroke data, please check this [repo](https://github.com/dilshansenarath/behaveformer), which the code in this repo is based on.
+This repository contains code for our BehaveFormer framework on behaviour biometrics continuous identification using swipe data (scroll up and scroll down gestures), published in IEEE Transactions on Biometrics, Behavior, and Identity Science (TBIOM, Q1 Journal) [\[IEEE link\]](https://ieeexplore.ieee.org/document/10510407) [\[free download\]](https://www.dropbox.com/scl/fi/eqx9cgghqkn8yswgqbdrb/20240426_STDAT.pdf?rlkey=10shcp54ap3nw794pq3xk4p7q&st=piyluk2u&dl=0).
+
+We extends the original BehaveFormer module built for keystroke data at [this repo](https://github.com/dilshansenarath/behaveformer) with several major changes: 
+- Allow for easier adaptation to new modality or dataset, change to process data on-the-fly during training to accomodate for large dataset.
+- Faster preprocessing for timeseries data (e.g. IMU synchronization): For example, on HuMIdb dataset, the processing speed using 8 CPUs reduces from 3 hours to 5 minutes (a 36x reduction). 
+- Training procedure (e.g, optimizer, learning rate, etc.) are changed to achieve better performance. Please check the paper for details.
+- Allow for datasets with varying number of sessions per user. In this case, during verification, you only need to declare the number of enrollment sessions, the rest of the available sessions will be used for verification.
+
+Eventhough this repo focus on swipe data, the framework can easily be extended to any other modalities with little effort.
 
 ## Abtract
-To be updated
+Continuous Authentication (CA) using behavioral biometrics is a type of biometric identification that recognizes individuals based on their unique behavioral characteristics. Many behavioral biometrics can be captured through multiple sensors, each providing multichannel time-series data. Utilizing this multichannel data effectively can enhance the accuracy of behavioral biometrics-based CA. This paper extends BehaveFormer, a new framework that effectively combines time series data from multiple sensors to provide higher security in behavioral biometrics. BehaveFormer includes two Spatio-Temporal Dual Attention Transformers (STDAT), a novel transformer we introduce to extract more discriminative features from multichannel time-series data. Experimental results on two behavioral biometrics, Keystroke Dynamics and Swipe Dynamics with Inertial Measurement Unit (IMU), have shown State-of-the-art performance. For Keystroke, on three publicly available datasets (Aalto DB, HMOG DB, and HuMIdb), BehaveFormer outperforms the SOTA. For instance, BehaveFormer achieved an EER of 2.95\% on the HuMIdb. For Swipe, on two publicly available datasets (HuMIdb and FETA) BehaveFormer outperforms the SOTA, for instance, BehaveFormer achieved an EER of 3.67\% on the HuMIdb. Additionally, the BehaveFormer model shows superior performance in various CA-specific evaluation metrics. The proposed STDAT-based BehaveFormer architecture can also be effectively used for transfer learning. The model weights and reproducible experimental results are available at [this repo]().
 
 ## Installation
 We use python 3.10.12 and Pytorch 2.0.1 for our experiments. 
@@ -67,9 +74,10 @@ sh scripts/<dataname>/<exp_set>/<step>.sh <action> <imu_type> <cuda_device, opti
 | feta | ablation | acc, gyr |
 
 ## Model weights
-We include the best model weights for each experiment in [this folder](). After download, extract the zip file to the same code folder by running: `unzip best_weights.zip`.
+We include the best model weights for each experiment in [this folder](https://www.dropbox.com/scl/fi/sy4p1eu25xgh6nxu7ckdv/best_weights.zip?rlkey=i1tf5croix3r9okumd6pfqew7&st=zanaw9q3&dl=0). After download, extract the zip file to the same code folder by running: `unzip best_weights.zip`.
 
 ## Updates
+- 2024-05-01: Release pretrained weights
 - 2023-11-18: Initial code release
 
 ## References
