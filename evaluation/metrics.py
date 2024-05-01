@@ -26,8 +26,8 @@ class Metric:
         paso=(fin-ini)/10000
         threshold = ini-paso
         while threshold < fin+paso:
-            far.append(torch.count_nonzero(scores_i >= threshold).item()/scores_i.shape[0])
-            frr.append(torch.count_nonzero(scores_g < threshold).item()/scores_g.shape[0])
+            far.append(torch.count_nonzero(scores_i >= threshold).item()/scores_i.shape[0])  # trr
+            frr.append(torch.count_nonzero(scores_g < threshold).item()/scores_g.shape[0])  # tar
             thresholds.append(threshold)
             threshold = threshold + paso
         

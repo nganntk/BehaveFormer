@@ -53,7 +53,7 @@ def create_logger(log_dir: str) -> logging.Logger:
     logger.addHandler(fh)
     return logger    
 
-def evaluate(model, test_dataset, test_dataloader, number_of_enrollment_sessions, number_of_verify_sessions, imu_type, device, dataname):
+def evaluate(model, test_dataset, test_dataloader, target_len, number_of_enrollment_sessions, number_of_verify_sessions, imu_type, device, dataname):
     """Evaluation method at the end of each training epoch
 
     Args:
@@ -80,7 +80,7 @@ def evaluate(model, test_dataset, test_dataloader, number_of_enrollment_sessions
                 feature_embeddings.append(model(item[0].to(device).float()))
     
     if dataname == 'humi':
-        eer = Metric.cal_user_eer_fixed_sessions(torch.cat(feature_embeddings, dim=0).view(test_dataset.num_users, test_dataset.num_sessions, test_dataset.num_seqs), number_of_enrollment_sessions, number_of_verify_sessions)[0]
+        eer = Metric.cal_user_eer_fixed_sessions(torch.cat(feature_embeddings, dim=0).view(test_dataset.num_users, test_dataset.num_sessions, test_dataset.num_seqs, target_len), number_of_enrollment_sessions, number_of_verify_sessions)[0]
        
     elif dataname == 'feta':
         num_users = len(test_dataset.user_list)
