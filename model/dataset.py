@@ -59,35 +59,16 @@ class BaseTrainDataset(Dataset):
 
         return anchor, positive, negative
 
-    def scale(self, single_sequence: list[np.array, np.array]):
-        """Scaling, use the same way as original BehaveFormer"""
-        # For scroll, divide fft by 100 to scale to the same range as others
-        for j in [3, 4]:  # time, x, y, fx, fy, x', y', x'', y''
-            single_sequence[0][:, j] = single_sequence[0][:, j] / 100
-
-        # Normalize IMU follows BehaveFormer
-        # Remove very large values from fft values
-        for j in [16, 17, 27, 28, 29]:   
-            for k in range(100):
-                if (single_sequence[1][k][j] >= 1000000):
-                    single_sequence[1][k][j] = 0.0
-                
-        # IMU scaling: Same as BehaveFormer
-        for j in range(36):
-            if (j in [0,1,2]):
-                single_sequence[1][:, j] = single_sequence[1][:, j] / 10
-            elif (j in [3,4,5,24,25,26,27,28,29]):
-                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
-            elif (j in [15,16,17]):
-                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
-        return single_sequence
-
     def convert_type(self, single_sequence: list[np.array, np.array]):
-        if single_sequence[0].dtype != self.data_type:
-            single_sequence[0] = single_sequence[0].astype(self.data_type)
-        if single_sequence[1].dtype != self.data_type:
-            single_sequence[1] = single_sequence[1].astype(self.data_type)
+        """Convert data to required data format, e.g., float64"""
+        for i in range(len(single_sequence)):
+            if single_sequence[i].dtype != self.data_type:
+                single_sequence[i] = single_sequence[i].astype(self.data_type)
         return single_sequence
+
+    def scale(self, single_sequence: list[np.array, np.array]):
+        """Scaling input data"""
+        raise NotImplementedError
 
     def create_user_sess_seq(self):
         """Creat indicies nested list here for each dataset"""
@@ -122,37 +103,18 @@ class BaseTestDataset(Dataset):
         seq_idx = idx % self.num_seqs
 
         return self.load_data(user_idx, session_idx, seq_idx)
-
-    def scale(self, single_sequence: list[np.array, np.array]):
-        """Scaling, use the same way as original BehaveFormer"""
-        # For scroll, divide fft by 100 to scale to the same range as others
-        for j in [3, 4]:  # time, x, y, fx, fy, x', y', x'', y''
-            single_sequence[0][:, j] = single_sequence[0][:, j] / 100
-
-        # Normalize IMU follows BehaveFormer
-        # Remove very large values from fft values
-        for j in [16, 17, 27, 28, 29]:   
-            for k in range(100):
-                if (single_sequence[1][k][j] >= 1000000):
-                    single_sequence[1][k][j] = 0.0
-                
-        # IMU scaling: Same as BehaveFormer
-        for j in range(36):
-            if (j in [0,1,2]):
-                single_sequence[1][:, j] = single_sequence[1][:, j] / 10
-            elif (j in [3,4,5,24,25,26,27,28,29]):
-                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
-            elif (j in [15,16,17]):
-                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
-        return single_sequence
-
+   
     def convert_type(self, single_sequence: list[np.array, np.array]):
-        if single_sequence[0].dtype != self.data_type:
-            single_sequence[0] = single_sequence[0].astype(self.data_type)
-        if single_sequence[1].dtype != self.data_type:
-            single_sequence[1] = single_sequence[1].astype(self.data_type)
+        """Convert data to required data format, e.g., float64"""
+        for i in range(len(single_sequence)):
+            if single_sequence[i].dtype != self.data_type:
+                single_sequence[i] = single_sequence[i].astype(self.data_type)
         return single_sequence
-
+    
+    def scale(self, single_sequence: list[np.array, np.array]):
+        """Scaling input data"""
+        raise NotImplementedError
+    
     def load_data(self):
         """Load data given user_idx, sess_idx, seq_idx. 
         This may be different from dataset to dataset."""
@@ -247,6 +209,30 @@ class HUMITrainDataset(BaseTrainDataset):
                 for sequence in range(len(self.data[user][session])):
                     self.data[user][session][sequence] = self.scale(self.convert_type(self.data[user][session][sequence]))
 
+    def scale(self, single_sequence: list[np.array, np.array]):
+        """Scaling, use the same way as original BehaveFormer"""
+        # For scroll, divide fft by 100 to scale to the same range as others
+        for j in [3, 4]:  # time, x, y, fx, fy, x', y', x'', y''
+            single_sequence[0][:, j] = single_sequence[0][:, j] / 100
+
+        # Normalize IMU follows BehaveFormer
+        # Remove very large values from fft values
+        for j in [16, 17, 27, 28, 29]:   
+            for k in range(100):
+                if (single_sequence[1][k][j] >= 1000000):
+                    single_sequence[1][k][j] = 0.0
+                
+        # IMU scaling: Same as BehaveFormer
+        for j in range(36):
+            if (j in [0,1,2]):
+                single_sequence[1][:, j] = single_sequence[1][:, j] / 10
+            elif (j in [3,4,5,24,25,26,27,28,29]):
+                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
+            elif (j in [15,16,17]):
+                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
+        return single_sequence
+
+
 class HUMITestDataset(BaseTestDataset):
     """All data is loaded at the beginning"""
     IMU_COLS = {'acc_gyr_mag': list(range(36)),
@@ -280,6 +266,29 @@ class HUMITestDataset(BaseTestDataset):
         self.imu_type = imu_type
         if self.imu_type != 'none' and imu_cols is None:
             self.imu_cols = self.IMU_COLS[self.imu_type]
+
+    def scale(self, single_sequence: list[np.array, np.array]):
+        """Scaling, use the same way as original BehaveFormer"""
+        # For scroll, divide fft by 100 to scale to the same range as others
+        for j in [3, 4]:  # time, x, y, fx, fy, x', y', x'', y''
+            single_sequence[0][:, j] = single_sequence[0][:, j] / 100
+
+        # Normalize IMU follows BehaveFormer
+        # Remove very large values from fft values
+        for j in [16, 17, 27, 28, 29]:   
+            for k in range(100):
+                if (single_sequence[1][k][j] >= 1000000):
+                    single_sequence[1][k][j] = 0.0
+                
+        # IMU scaling: Same as BehaveFormer
+        for j in range(36):
+            if (j in [0,1,2]):
+                single_sequence[1][:, j] = single_sequence[1][:, j] / 10
+            elif (j in [3,4,5,24,25,26,27,28,29]):
+                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
+            elif (j in [15,16,17]):
+                single_sequence[1][:, j] = single_sequence[1][:, j] / 1000
+        return single_sequence
 
     def load_data(self, user_idx, sess_idx, seq_idx):
         assert len(self.data[user_idx][sess_idx][seq_idx]) == 2, "Data must contain 2 elements: action, imu"
