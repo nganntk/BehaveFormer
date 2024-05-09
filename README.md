@@ -1,5 +1,5 @@
 # Spatio-Temporal Dual-Attention Transformer for Time-Series Behavioral Biometrics
-This repository contains code for our BehaveFormer framework on behaviour biometrics continuous identification using swipe data (scroll up and scroll down gestures), published in IEEE Transactions on Biometrics, Behavior, and Identity Science (TBIOM, Q1 Journal) [\[IEEE link\]](https://ieeexplore.ieee.org/document/10510407) [\[free download\]](https://www.dropbox.com/scl/fi/eqx9cgghqkn8yswgqbdrb/20240426_STDAT.pdf?rlkey=10shcp54ap3nw794pq3xk4p7q&st=piyluk2u&dl=0).
+This repository contains code for our BehaveFormer framework on behaviour biometrics continuous identification using swipe data (scroll up and scroll down gestures), published in IEEE Transactions on Biometrics, Behavior, and Identity Science (TBIOM, Q1 Journal) [\[IEEE link\]](https://ieeexplore.ieee.org/document/10510407) [\[free download\]](https://www.dropbox.com/scl/fi/5lxfacb7e9zj7019ncqp6/TBIOM3394875.pdf?rlkey=et3ryhn1baminwahjw2wyu773&dl=0).
 
 We extends the original BehaveFormer module built for keystroke data at [this repo](https://github.com/dilshansenarath/behaveformer) with several major changes: 
 - Allow for easier adaptation to new modality or dataset, change to process data on-the-fly during training to accomodate for large dataset.
